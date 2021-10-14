@@ -1,0 +1,32 @@
+.playlist-app {
+    display: grid;
+    grid-gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.album-art {
+    width: 90%;
+    border-radius: 1em
+}
+
+
+.container {
+    display: flex; /* or inline-flex */
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+.grid-item {
+    margin: 1em;
+}
+
+.playlist-card{
+    width: 300px;
+    background-color:black;
+    border-radius: 1em;
+}
+
+.playlist-card:hover{
+    background-color:cadetblue;
+    border-radius: 1em;
+}
