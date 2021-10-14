@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { authEndpoint, clientId, redirectUri, scopes } from "./config";
-import hash from "./hash";
+import { authEndpoint, clientId, redirectUri, scopes } from "./helpers/config";
+import hash from "./helpers/hash";
 // import Player from "./Player";
-import PlaylistTiles from "./PlaylistsTiles";
+import PlaylistTiles from "./components/PlaylistsTiles";
 // import Navbar from "./Navbar";
 // import logo from "./logo.svg";
-import "./App.css";
+import "./css/App.css";
 import axios from "axios";
 // import getCurrentlyPlaying from "./spotifyFunctions";
 

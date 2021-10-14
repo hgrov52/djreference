@@ -1,5 +1,5 @@
 import React from "react";
-import "./Player.css";
+import "../css/Player.css";
 import { MdSkipNext } from "react-icons/md";
 import { MdSkipPrevious } from "react-icons/md";
 // import { IconButton } from '@mui/material';
