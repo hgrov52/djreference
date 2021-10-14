@@ -1,7 +1,7 @@
 // Default
 import React from 'react';
 import axios from 'axios';
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, withRouter } from "react-router-dom";
 
 
 // CSS
@@ -59,7 +59,7 @@ class App extends React.Component {
     }
 
     // set interval for polling every 1 seconds
-    // this.interval = setInterval(() => this.tick(), 1000);
+    this.interval = setInterval(() => this.tick(), 1000);
   }
 
   componentWillUnmount() {
@@ -175,39 +175,36 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-
         <header className="App-header">
-          <Navbar />
+          {!this.state.token && (
+            <LoginPage />
+          )}
+          {this.state.token && (
+            <div>
 
-          <div>
-            <Router>
-              <Switch>
-                <Route exact path="/" component={LoginPage} />
-                <Route exact path="/playlist-select" component={PlaylistTiles} />
-                <Route exact path="/player" component={Player} />
-              </Switch>
 
-            </Router>
 
-          </div>
-        </header>
 
-        {/* <div className="App">
-          <header className="App-header">
-            {!this.state.token && (
-              <LoginPage />
-            )}
-            {this.state.token && (
-              // <Navbar />
               <div>
-                <PlaylistTiles
-                  playlists={this.state.playlists}>
+                <Router>
+                  <Navbar />
+                  <Switch>
+                    <Route exact path="/playlist-select" render={withRouter(() => <PlaylistTiles playlists={this.state.playlists} />)} />
+                    <Route exact path="/player" render=
+                      {withRouter(() => <Player
+                        item={this.state.item}
+                        is_playing={this.state.is_playing}
+                        progress_ms={this.state.progress_ms}
+                        tick={this.tick}
+                      />)}
+                    />
+                  </Switch>
+                </Router>
 
-                </PlaylistTiles>
               </div>
-            )}
-          </header>
-        </div> */}
+            </div>
+          )}
+        </header>
       </div>
     );
   }

@@ -31,7 +31,7 @@ const Player = props => {
 
 
   return (
-    <div className="App">
+    <div>
       <div className="background" style={backgroundStyles} />{" "}
       <div className="main-wrapper">
         <div className="btn-next-song" onClick={prevSong}>

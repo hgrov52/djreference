@@ -9,9 +9,6 @@ class Navbar extends React.Component {
                 <Router>
                     <ul className="nav">
                         <li>
-                            <Link to="/">Login</Link>
-                        </li>
-                        <li>
                             <Link to="/playlist-select">Playlists</Link>
                         </li>
                         <li>

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+// import { useState } from "react";
 import "../css/PlaylistTiles.css";
 
 // import { IconButton } from '@mui/material';
@@ -9,12 +10,11 @@ export function PlaylistTiles(props) {
     //         })`,
     // };
 
-
     const clickPlaylist = (playlist) => {
         console.log(playlist);
     }
 
-    let { playlists, setPlaylists } = useState(null)
+    // let { playlists, setPlaylists } = useState()
 
     return (
         <div>
@@ -22,7 +22,7 @@ export function PlaylistTiles(props) {
                 Select Playlist
             </h1>
             <div className="container">
-                {playlists.map((playlist, i) => {
+                {props.playlists.map((playlist, i) => {
                     try {
                         return (
                             <div key={i} className="grid-item" onClick={() => { clickPlaylist(playlist) }}>
