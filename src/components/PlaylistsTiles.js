@@ -1,5 +1,5 @@
 import React from "react";
-import "./PlaylistTiles.css";
+import "../css/PlaylistTiles.css";
 
 // import { IconButton } from '@mui/material';
 
