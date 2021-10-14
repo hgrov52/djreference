@@ -1,8 +1,8 @@
 import React from "react";
-import hash from "../helpers/hash";
-import { authEndpoint, clientId, redirectUri, scopes } from "./config";
+import { authEndpoint, clientId, redirectUri, scopes } from "../helpers/config";
 
 export function LoginPage() {
+
     return (
         <a
             className="btn btn--login App-link"

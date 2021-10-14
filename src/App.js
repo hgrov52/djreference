@@ -1,19 +1,24 @@
-import React, { Component } from "react";
-import { authEndpoint, clientId, redirectUri, scopes } from "./helpers/config";
-import hash from "./helpers/hash";
-// import Player from "./Player";
-import PlaylistTiles from "./components/PlaylistsTiles";
-// import Navbar from "./Navbar";
-// import logo from "./logo.svg";
-import "./css/App.css";
-import axios from "axios";
-// import getCurrentlyPlaying from "./spotifyFunctions";
-
-// const clientSecret = 'e2da1269c7664b16825c4991d882d521'
+// Default
+import React from 'react';
+import axios from 'axios';
+import { BrowserRouter as Router, Switch, Route, withRouter } from "react-router-dom";
 
 
+// CSS
+import './css/index.css';
+import './css/App.css';
 
-class App extends Component {
+// Components
+import PlaylistTiles from './components/PlaylistsTiles';
+import { LoginPage } from './components/LoginPage';
+import Player from './components/Player';
+import Navbar from './components/Navbar';
+
+// Helpers
+import hash from './helpers/hash.js'
+// import * as serviceWorker from './helpers/serviceWorker';
+
+class App extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -43,6 +48,7 @@ class App extends Component {
     // Set token
     let _token = hash.access_token;
 
+
     if (_token) {
       // Set token
       this.setState({
@@ -53,7 +59,7 @@ class App extends Component {
     }
 
     // set interval for polling every 1 seconds
-    // this.interval = setInterval(() => this.tick(), 1000);
+    this.interval = setInterval(() => this.tick(), 1000);
   }
 
   componentWillUnmount() {
@@ -123,6 +129,7 @@ class App extends Component {
 
 
   async getPlaylists(token) {
+    console.log('here')
     var _next_url = "https://api.spotify.com/v1/me/playlists?limit=50"
     this.setState({
       playlists: []
@@ -169,41 +176,32 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          {/* <img src={logo} className="App-logo" alt="logo" /> */}
           {!this.state.token && (
-            <a
-              className="btn btn--login App-link"
-              href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
-                "%20"
-              )}&response_type=token&show_dialog=true`}
-            >
-              Login to Spotify
-            </a>
+            <LoginPage />
           )}
-          {/* {this.state.token && !this.state.no_data && (
-            <Player
-              item={this.state.item}
-              is_playing={this.state.is_playing}
-              progress_ms={this.state.progress_ms}
-              tick={this.tick}
-              nextSong={this.nextSong}
-            />
-          )}
-          {this.state.no_data && (
-            <p>
-              You need to be playing a song on Spotify, for something to appear here.
-            </p>
-          )} */}
           {this.state.token && (
-            // <Navbar />
             <div>
-              <h1>
-                Select Playlist
-              </h1>
-              <PlaylistTiles
-                playlists={this.state.playlists}>
 
-              </PlaylistTiles>
+
+
+
+              <div>
+                <Router>
+                  <Navbar />
+                  <Switch>
+                    <Route exact path="/playlist-select" render={withRouter(() => <PlaylistTiles playlists={this.state.playlists} />)} />
+                    <Route exact path="/player" render=
+                      {withRouter(() => <Player
+                        item={this.state.item}
+                        is_playing={this.state.is_playing}
+                        progress_ms={this.state.progress_ms}
+                        tick={this.tick}
+                      />)}
+                    />
+                  </Switch>
+                </Router>
+
+              </div>
             </div>
           )}
         </header>
