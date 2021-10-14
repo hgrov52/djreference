@@ -1,15 +1,24 @@
 import React from "react";
+import { BrowserRouter as Router, Link } from "react-router-dom";
+
 
 class Navbar extends React.Component {
     render() {
         return (
             <div>
-                <ul id="nav">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
+                <Router>
+                    <ul className="nav">
+                        <li>
+                            <Link to="/">Login</Link>
+                        </li>
+                        <li>
+                            <Link to="/playlist-select">Playlists</Link>
+                        </li>
+                        <li>
+                            <Link to="/player">Player</Link>
+                        </li>
+                    </ul>
+                </Router>
             </div>
         );
     }
