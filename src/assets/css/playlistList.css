@@ -1,0 +1,10 @@
+.container {
+    display: flex; /* or inline-flex */
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+.grid-item {
+    margin: 1em;
+    width: 300px;
+}
