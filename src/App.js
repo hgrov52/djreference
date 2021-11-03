@@ -189,8 +189,8 @@ class App extends React.Component {
                 <Router>
                   <Navbar />
                   <Switch>
-                    <Route exact path="/playlist-select" render={withRouter(() => <PlaylistTiles playlists={this.state.playlists} />)} />
-                    <Route exact path="/player" render=
+                    <Route path="/playlist-select" exact render={withRouter(() => <PlaylistTiles playlists={this.state.playlists} />)} />
+                    <Route path="/player" exact render=
                       {withRouter(() => <Player
                         item={this.state.item}
                         is_playing={this.state.is_playing}
@@ -198,6 +198,7 @@ class App extends React.Component {
                         tick={this.tick}
                       />)}
                     />
+                    <Route path="/song-download/:song" />
                   </Switch>
                 </Router>
 
