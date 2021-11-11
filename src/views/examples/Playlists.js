@@ -4,16 +4,6 @@ import React from "react";
 // reactstrap components
 import {
     Button,
-    Badge,
-    Card,
-    CardHeader,
-    CardBody,
-    FormGroup,
-    Form,
-    Input,
-    InputGroupAddon,
-    InputGroupText,
-    InputGroup,
     Container,
     Row,
     Col
@@ -24,7 +14,7 @@ import axios from "axios";
 // core components\
 import CheckLoginPage from "./CheckLoginPage";
 import PlaylistCard from "components/Cards/PlaylistCard";
-import "../../assets/css/playlistList.css"
+import "../../assets/css/custom.css"
 
 class Playlists extends CheckLoginPage {
     state = { playlists: null }
@@ -33,6 +23,7 @@ class Playlists extends CheckLoginPage {
         document.scrollingElement.scrollTop = 0;
         // this.refs.main.scrollTop = 0;
         console.log(this.props.token)
+        this.getPlaylists(this.props.token)
     }
 
     async getPlaylists(token) {
@@ -120,8 +111,8 @@ class Playlists extends CheckLoginPage {
                                 {this.state.playlists.map((playlist, i) => {
                                     try {
                                         return (
-                                            <div>
-                                                <div key={i} className="grid-item" >
+                                            <div key={i} >
+                                                <div className="grid-item" >
                                                     <PlaylistCard playlist={this.state.playlists[i]} imageUrl={this.state.playlists[i].images[0].url} />
                                                 </div>
                                             </div>

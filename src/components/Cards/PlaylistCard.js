@@ -1,15 +1,16 @@
 
 import React from "react";
+import { Link } from "react-router-dom";
 
 // reactstrap components
 import {
-    Button,
     Card,
     CardBody,
 } from "reactstrap";
 
 
 class PlaylistCard extends React.Component {
+
 
     handleSelect(e) {
         e.preventDefault()
@@ -23,7 +24,7 @@ class PlaylistCard extends React.Component {
 
                         <img
                             src={this.props.imageUrl}
-                            className="icon icon-shape-primary rounded-circle mb-1"
+                            className="card-img"
                             alt="Album Art"
                         />
                         <h6 className="text-primary text-uppercase">
@@ -32,14 +33,7 @@ class PlaylistCard extends React.Component {
                         <p className="description mt-3">
                             {this.props.playlist.tracks.total} Tracks
                         </p>
-                        <Button
-                            className="mt-4"
-                            color="primary"
-                            href="#pablo"
-                            onClick={e => this.handleSelect(e)}
-                        >
-                            Download {this.props.playlist.name}
-                        </Button>
+                        <Link className="btn btn-primary mt-4" to={{ pathname: '/song-download-page', query: { playlistId: this.props.playlist.id } }}>Download {this.props.playlist.name}</Link>
                     </CardBody>
                 </Card>
 
