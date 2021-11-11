@@ -1,0 +1,6 @@
+node_modules/
+
+.DS_Store
+python/keys.json
+python/venv
+python/previous.token

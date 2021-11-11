@@ -30,6 +30,7 @@ import Profile from "views/examples/Profile.js";
 import Register from "views/examples/Register.js";
 import Playlists from "views/examples/Playlists";
 import CheckLoginPage from "views/examples/CheckLoginPage";
+import SongDownload from "views/examples/SongDownload";
 
 ReactDOM.render(
   <BrowserRouter>
@@ -73,6 +74,15 @@ ReactDOM.render(
         render={props =>
           <CheckLoginPage>
             <Playlists {...props} />
+          </CheckLoginPage>
+        }
+      />
+      <Route
+        path="/song-download-page"
+        exact
+        render={props =>
+          <CheckLoginPage>
+            <SongDownload {...props} />
           </CheckLoginPage>
         }
       />

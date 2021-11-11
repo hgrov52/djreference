@@ -8,3 +8,9 @@
     margin: 1em;
     width: 300px;
 }
+
+.song-item {
+  margin: 1em;
+  display: center;
+  width: 100%;
+}
