@@ -6,8 +6,10 @@ import os
 import re
 from urllib.request import urlopen
 
-SPOTIFY_CLIENT_ID = 'ca1b674cf18b42918494dc988fb4e670'
-SPOTIFY_SECRET = 'e2da1269c7664b16825c4991d882d521'
+keys = json.load(open('keys.json','r'))
+
+SPOTIFY_CLIENT_ID = keys['client_id']
+SPOTIFY_SECRET = keys['secret']
 
 SPOTIFY_TOKEN = ''
 
@@ -71,16 +73,19 @@ def get_tracks_from_playlist_url(shared_url):
 	playlist_id = shared_url.split('/')[-1]
 	next_link = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks?limit=100"
 
-	failed_attempts = 0
 	master_track_list = []
 	while(next_link is not None):
 		response = requests.request("GET", next_link, headers=headers)
 		if(not response.ok):
-			if(failed_attempts >0):
-				print('failed_attempts')
-				print(response.text)
-				exit(1)
-			failed_attempts +=1
+			print(response.text)
+			print()
+			print(' ~~~~~~~~~~~~~~~~~~~~~~~~~')
+			print(' | re-run with --refresh |')
+			print(' ~~~~~~~~~~~~~~~~~~~~~~~~~')
+			print()
+			exit(1)
+
+			# TODO enable auto refresh but ensure we dont fall into an infinite loop 
 			# refresh_access_token()
 			continue
 
