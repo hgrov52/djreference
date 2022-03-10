@@ -59,7 +59,7 @@ def get_tracks_from_playlist_url(shared_url):
 				'artists':[x['name'] for x in track['track']['artists']],
 				'coverArtUrl':track['track']['album']['images'][0]['url'],
 				'album':track['track']['album']['name'],
-				'duration':f"{int(num_secs//60)}:{int(num_secs%60)}"
+				'duration':f"{int(num_secs//60)}:{int(num_secs%60) if(int(num_secs%60)>9) else '0'+str(int(num_secs%60))}"
 				}
 			)
 		return track_list
@@ -113,11 +113,15 @@ def get_tracks_from_playlist_url(shared_url):
 
 	"""
 
-def verified_integer_input(lower_bound, upper_bound):
+def verified_integer_input(lower_bound, upper_bound, text="Choice:"):
 	choice = None
 	while(not isinstance(choice, int) or choice <lower_bound or choice > upper_bound):
 		try:
-			choice = int(input('selection: '))
+			choice = input(f'{text} ')
+			if(choice == 'skip'):
+				return choice
+			else:
+				choice = int(choice)
 		except:
 			pass
 	return choice
@@ -128,8 +132,14 @@ def search_on_mp3_juices(track_obj):
 
 	
 
-	search_content = '%20'.join(name.split(' ')+[artists[0].replace('ø','o'),'extended'])
+	search_content = ' '.join(artists[0].replace('ø','o').split(' ')+name.split(' ')+['extended'])
 	search_content = search_content.replace('/','')
+
+	# url = f"https://www.mp3juices.cc/sc/yt/s/?q={search_content}"
+	# headers = {
+	# 	'Referer': 'https://www.mp3juices.cc/',
+	# 	'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'
+	# }
 
 	url = f"https://mp3-juice.com/api.php?q={search_content}"
 
@@ -143,7 +153,7 @@ def search_on_mp3_juices(track_obj):
 	'sec-ch-ua-platform': '"macOS"'
 	}
 
-	response = requests.request("GET", url, headers=headers)
+	response = requests.request("GET", url,headers=headers)
 	response = json.loads(response.text)
 
 	extended_mix_pick = None
@@ -152,25 +162,27 @@ def search_on_mp3_juices(track_obj):
 	print()
 	print('Choices:')
 	for i,youtube_item in enumerate(response['items']):
+		yt_title = youtube_item['title']
+
 		try:
 			view_count = int(youtube_item['viewCount'])
 			view_count = f'{view_count/1e6:.2f}M' if view_count>1e6 else f'{view_count//1e3:.0f}K'
 		except:
 			view_count = youtube_item['viewCount']
-		print(f"\t{i+1}) ({youtube_item['duration']}) {view_count} views\t{youtube_item['title']} ({i+1})")
+		print(f"\t{i+1}) ({youtube_item['duration']}) {view_count} views\t{yt_title} ({i+1})")
 
 
 		# if the title matches exactly with no artist then the first match is the youtube music pick
-		if(youtube_music_pick is None and name == youtube_item['title']):
+		if(youtube_music_pick is None and name == yt_title):
 			youtube_music_pick = (i+1,youtube_item)
 
 		# if the title and artist matches excluding case and there exists 'extended mix' then the first match is the extended pick
-		if(extended_mix_pick is None and name.lower() in youtube_item['title'].lower() and artists[0].lower() in youtube_item['title'].lower() and 'extended mix' in youtube_item['title'].lower()):
+		if(extended_mix_pick is None and name.lower() in yt_title.lower() and artists[0].lower() in yt_title.lower() and 'extended mix' in yt_title.lower()):
 			extended_mix_pick = (i+1,youtube_item)
 
 		# if the result title minus the song name and artists contains no further letters then the firs result is the regular pick
 
-		yt_track_title = youtube_item['title'].lower()
+		yt_track_title = yt_title.lower()
 		for x in [a.lower() for a in artists] + [name.lower()]:
 			yt_track_title = yt_track_title.replace(x,'')
 
@@ -191,6 +203,8 @@ def search_on_mp3_juices(track_obj):
 		print()
 
 	choice = verified_integer_input(1, len(response['items']))
+	if(choice == 'skip'):
+		return choice
 
 
 	return response['items'][choice-1]
@@ -209,6 +223,7 @@ def parse_song_name(track_obj):
 	[
 		'ft',
 		'feat',
+		'Feat'
 		'remix',
 		'extended',
 		'monstercat',
@@ -338,35 +353,57 @@ if __name__ == "__main__":
 			SPOTIFY_TOKEN = f.read()
 
 
+	if not os.path.exists('skipped.json'):
+		with open('skipped.json', 'w'): pass
+
+
+
 
 	shared_url = "https://open.spotify.com/playlist/1Vnca95X4I15IvZPHBArcU?si=75f779967f984b60"
+	shaynes_4onfloor = 'https://open.spotify.com/playlist/6AlcPBcafc7LGfdjc3hpQc?si=75e7a17e1b3e40f7'
 
 	# example_track = {
 	# 	'name': 'For The Love Of Money',
 	# 	'artists': ['MOTi','Michael Ford']
 	# }
 
+	
+	track_list = get_tracks_from_playlist_url(shaynes_4onfloor)
+	for i,track in enumerate(track_list[:]):
+		try:
+			skipped = json.load(open('skipped.json','r'))
+		except:
+			skipped = []
+			
 
-	track_list = get_tracks_from_playlist_url(shared_url)
-	for track in track_list[:]:
+
 
 		print("\n\n=====================================================")
-		print('Up Next:')
+		print(f'Up Next ({i+1}/{len(track_list)}):')
 		print(f'\t({track["duration"]}) {track["artists"][0]} - {track["name"]}')
+
+
+		if(f'{track["artists"][0]} - {track["name"]}' in skipped):
+			print('Skip Found, Continuing...')
+			continue
 
 		exists = check_if_already_exists(track)
 		if(exists):
 			print('Duplicate Found, Continuing...')
 			print()
 			continue
-		try:
-			youtube_item = search_on_mp3_juices(track)
-		except:
-			print(track)
-			print('could not be found')
-			input("press any key to continue...")
+		# try:
+		youtube_item = search_on_mp3_juices(track)
+		if(youtube_item=='skip'):
+			print(youtube_item)
+			skipped.append(f'{track["artists"][0]} - {track["name"]}')
+			json.dump(skipped,open('skipped.json','w'))
 			continue
-		# print(youtube_item)
+		# except:
+		# 	print(track)
+		# 	print('could not be found')
+		# 	input("press any key to continue...")
+		# 	continue
 		filename = download_youtube_link(youtube_item['url'], track)
 
 		# add meta data
@@ -378,6 +415,8 @@ if __name__ == "__main__":
 		audiofile.tag.album = track['album']
 		audiofile.tag.images.set(eyed3.id3.frames.ImageFrame.FRONT_COVER, urlopen(track['coverArtUrl']).read(), 'image/jpeg')
 		audiofile.tag.save()
+
+		
 
 
 
